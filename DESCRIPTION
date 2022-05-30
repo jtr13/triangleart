@@ -1,0 +1,16 @@
+Package: triangleart
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: c(
+  person("Joyce", "Robbins", email="joycerobbins1@gmail.com",
+  role = c("cre", "aut")))
+Description: What the package does (one paragraph).
+URL: https://github.com/jtr13/triangleart
+BugReports: https://github.com/jtr13/triangleart/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+
+
+
