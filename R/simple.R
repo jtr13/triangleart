@@ -22,91 +22,92 @@
 # Next steps: change the algorithm so it goes point by point finding the closest *triangle* (based on all vertices) rather than finding the closest *point* to the current triangle. The current methods results in big jumps once the close points are used up.
 #
 
-# vertices of the maybe triangle, only the shortest two are maybe (this is an improvement over triangles2.R)
+# vertices of the twovert triangle, only the shortest two are twovert (this is an improvement over triangles2.R)
 #' Very simple mesh algorithms that don't work
 
 #' @export
 #'
-simple <- function(df = NULL, np = NULL, method = "closepoint",
-                   tlab = FALSE, plab = FALSE) {
+simple <- function(df = NULL, i = 4, np = NULL, method = "closepoint",
+                   tlab = FALSE, plab = FALSE, seed = 8, col = NA) {
   border <- "black"
-  if (is.null(df)) {
-    set.seed(22)
-    n <- 4
-    x <- rep(1:n, n) + rnorm(n^2)/10
-    y <- rep(1:n, each = n) + rnorm(n^2)/10
-    df <- data.frame(pts = 1:16, x,y)
+  if (is.null(df)) df <- generate_data(seed = seed)
+  if (is.null(np)) {
+    np <- nrow(df)
+    unfinished <- FALSE
+  } else {
+    if (np >= nrow(df)) stop(paste("np must be less than", nrow(df)))
+    np <- np + 1
+    unfinished <- TRUE
   }
-  if (is.null(np)) np <- nrow(df)
-  plot(df$x, df$y, pch = 16, cex = .5, asp = 1, axes = FALSE,
-       ann = FALSE)
-  title("triangles.R")
+  plot(df$x, df$y, pch = 16, asp = 1, axes = FALSE,
+       ann = FALSE, col = "white")
   if (plab) text(df$x+.1, df$y+.1, col = "red", cex = .7)
-  m <- matrix(0, nrow(df), nrow(df))
-  diag(m) <- 1
+  dmat <- as.matrix(dist(df[,2:3], diag = TRUE, upper = TRUE))
   used <- rep(0, nrow(df))
 
-  # first side
-  i <- 4
-  d <- sqrt((df$x[i]-df$x)^2 + (df$y[i]-df$y)^2)
+  # initial triangle -- same for all methods
+  d <- dmat[,i]
   d[i] <- 1000
-  i2 <- which(d == min(d))[1]
-  m[i,i2] <- 1; m[i2,i] <- 1
-
-  # second side
+  i2 <- which(d == min(d))[1] # 2nd vertex
   d[i2] <- 1000
-  i3 <- which(d == min(d))[1]
-  m[i, i3] <- 1; m[i3, i] <- 1
-
-  # third side (close the triangle)
-  m[i2, i3] <- 1; m[i3, i2] <- 1
+  i3 <- which(d == min(d))[1] # 3rd vertex
+  triangle <- data.frame(i, i2, i3)
   v <- df[c(i, i2, i3),]
   used[c(i, i2, i3)] <- 1
-  polygon(v$x, v$y)
-  if (tlab) text(mean(v$x), mean(v$y), 1)
+  polygon(v$x, v$y, border = border, col = col)
+
   focus <- i3
 
   while(sum(used) < np) {
-    d <- sqrt((df$x[focus]-df$x)^2 + (df$y[focus]-df$y)^2)
-    d[used==1] <- 1000
-    newp <- which(d == min(d))[1]
+    # find newp and triangle to draw to (v)
+    if (method == "closepoint") {
+      d <- dmat[,focus]
+      d[used==1] <- 1000
+      newp <- which(d == min(d))[1]
+      } else {
+
+    # find the used / unused point pair with shortest distance
+      minidmat <- dmat[used==1, used==0, drop = FALSE]
+      pts <- which(minidmat == min(minidmat), arr.ind = TRUE)[1,]
+      newp <- which(used==0)[pts[2]]
+      u <- which(used==1)[pts[1]]
+      triopt <- triangle[u %in% triangle$i || u %in% triangle$i2 || u %in% triangle$i3]
+      triopt$dist <- apply(triopt, 1, function(x) sum(dmat[newp, x]))
+      verts <- as.numeric(triopt[triopt$dist == min(triopt$dist),][,1:3])
+      v <- df[verts,]
+    }
+
     used[newp] <- 1
     p <- df[newp, c("x", "y")]
 
-    maybe <- vector()
-
+    # Identify and draw new triangle
+    twovert <- vector()
     if (crosscheck(v[3, 2:3], v[2, 2:3], v[1, 2:3], p) ||
-        crosscheck(v[1, 2:3], p, v[3, 2:3], v[2, 2:3])) maybe <- v$pt[1]
+        crosscheck(v[1, 2:3], p, v[3, 2:3], v[2, 2:3])) twovert <- v$pt[1]
 
     if (crosscheck(v[3, 2:3], v[1, 2:3], v[2, 2:3], p) ||
-        crosscheck(v[2, 2:3], p, v[3, 2:3], v[1, 2:3])) maybe <- c(maybe, v$pt[2])
+        crosscheck(v[2, 2:3], p, v[3, 2:3], v[1, 2:3])) twovert <- c(twovert, v$pt[2])
 
     if (crosscheck(v[1, 2:3], v[2, 2:3], v[3, 2:3], p) ||
-        crosscheck(v[3, 2:3], p, v[1, 2:3], v[2, 2:3])) maybe <- c(maybe, v$pt[3])
+        crosscheck(v[3, 2:3], p, v[1, 2:3], v[2, 2:3])) twovert <- c(twovert, v$pt[3])
 
-    if (length(maybe) > 2) {
-      vdf <- df[maybe,]
+    if (length(twovert) > 2) {
+      vdf <- df[twovert,]
       vdf$dist <- sqrt((vdf$x-df$x[newp])^2 + (vdf$y-df$y[newp])^2)
-      maybe <- vdf$pt[vdf$dist != max(vdf$dist)]
+      twovert <- vdf$pt[vdf$dist != max(vdf$dist)]
     }
-
-    m[maybe, newp] <- 1
-    m[newp, maybe] <- 1
-    if (np < nrow(df) && sum(used) == np) border <- "red"
-
-    polygon(df$x[c(maybe, newp)], df$y[c(maybe, newp)], border = border)
 
     # new triangle vertices
     focus <- newp
-    v <- df[which(m[newp,] == 1),]
-    if (tlab) text(mean(v$x), mean(v$y[1:3]), sum(used)-2, cex = .7,
-                   col = border)
+    v <- df[c(twovert, newp),]
+    triangle <- rbind(c(twovert, newp), triangle)
+    if (unfinished && sum(used) == np) {
+      points(p, col = "red", pch = 16)
+    } else {
+      if(unfinished && sum(used) == np - 1) border <- "red"
+      polygon(v$x, v$y, border = border, col = col)
+      if (tlab) text(mean(v$x), mean(v$y[1:3]), sum(used)-3, cex = .7,
+                     col = border)
+    }
   }
-
 }
-
-
-
-
-
-
