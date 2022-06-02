@@ -13,11 +13,11 @@ y <- rep(1:n, each = n) + rnorm(n^2)/10
 df <- data.frame(x,y)
 
 #df <- read.csv("data/readme_example.csv")
-i <- 50
-dmat <- as.matrix(dist(df, diag = TRUE, upper = TRUE))
+i <- 4
+dmat <- as.matrix(dist(df[,2:3], diag = TRUE, upper = TRUE))
 
 # initial plot
-plot(df, pch = 16, cex = .5, asp = 1, axes = FALSE,
+plot(df$x, df$y, pch = 16, cex = .5, asp = 1, axes = FALSE,
      ann = FALSE)
 title("triangles3.R")
 #text(df+.1, col = "red", cex = .7)
@@ -32,7 +32,7 @@ d[c(i, i2)] <- 1000
 i3 <- which(d == min(d))[1]
 used[c(i, i2, i3)] <- 1
 vertices <- df[c(i, i2, i3),]
-polygon(vertices)
+polygon(vertices[,2:3])
 triangle <- data.frame(i, i2, i3)
 text(mean(vertices$x), mean(vertices$y), nrow(triangle))
 
@@ -70,7 +70,7 @@ while(sum(used) < length(used)) {
   # new triangle vertices
   used[newp] <- 1
   vertices <- df[c(i, i2, i3),]
-  polygon(vertices)
+  polygon(vertices[,2:3])
   triangle <- rbind(c(i, i2, i3), triangle)
   text(mean(vertices$x), mean(vertices$y), nrow(triangle), cex = .7)
 }

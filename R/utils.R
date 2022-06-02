@@ -1,5 +1,14 @@
 # an attempt at triangle mesh
 
+#' @export
+generate_data <- function(np = 16, seed = 13) {
+  set.seed(seed)
+  n <- sqrt(np)
+  x <- rep(1:n, n) + rnorm(n^2)/10
+  y <- rep(1:n, each = n) + rnorm(n^2)/10
+  data.frame(pts = 1:np, x,y)
+}
+
 sameside <- function(v1, v2, v3, p) {
   y <- c(v1$y, v2$y)
   x <- c(v1$x, v2$x)
@@ -32,11 +41,3 @@ intersect <- function(v1, v2, v3, p) {
   ifelse(test1 && test2, TRUE, FALSE)
 }
 
-crosscheck <- function(v1, v2, v3, p) {
-  y <- c(v1$y, v2$y)
-  x <- c(v1$x, v2$x)
-  mod <- lm(y ~ x)
-  v3sign <- sign(v3$y - predict(mod, v3))
-  psign <- sign(p$y - predict(mod, p))
-  ifelse(v3sign == psign, TRUE, FALSE)
-}

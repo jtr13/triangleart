@@ -4,7 +4,21 @@
 \alias{simple}
 \title{Very simple mesh algorithms that don't work}
 \usage{
-simple(df = NULL, np = NULL, method = "closepoint", tlab = FALSE, plab = FALSE)
+simple(
+  df = NULL,
+  i = 4,
+  np = NULL,
+  method = "anypair",
+  tlab = FALSE,
+  plab = FALSE,
+  seed = 8,
+  col = NA
+)
+}
+\arguments{
+\item{df}{}
+
+\item{col}{}
 }
 \description{
 Very simple mesh algorithms that don't work

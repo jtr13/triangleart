@@ -16,7 +16,7 @@
 #
 # Getting better... fixed the problem of checking whether
 # line segments intersect
-# (needed crosscheck(v[1,], v[2,] v[3,] p) || crosscheck(v[3,] p, v[1,], v[2,]),
+# (needed sameside(v[1,], v[2,] v[3,] p) || sameside(v[3,] p, v[1,], v[2,]),
 # not just the first half)
 #
 # Next steps: change the algorithm so it goes point by point finding the closest *triangle* (based on all vertices) rather than finding the closest *point* to the current triangle. The current methods results in big jumps once the close points are used up.
@@ -25,6 +25,16 @@
 # vertices of the twovert triangle, only the shortest two are twovert (this is an improvement over triangles2.R)
 #' Very simple mesh algorithms that don't work
 
+#' @param df
+#'
+#' @param i
+#' @param np
+#' @param method
+#' @param tlab
+#' @param plab
+#' @param seed
+#' @param col
+#'
 #' @export
 #'
 simple <- function(df = NULL, i = 4, np = NULL, method = "anypair",
@@ -87,14 +97,14 @@ simple <- function(df = NULL, i = 4, np = NULL, method = "anypair",
 
     # Identify and draw new triangle
     twovert <- vector()
-    if (crosscheck(v[3, 2:3], v[2, 2:3], v[1, 2:3], p) ||
-        crosscheck(v[1, 2:3], p, v[3, 2:3], v[2, 2:3])) twovert <- v$pt[1]
+    if (sameside(v[3, 2:3], v[2, 2:3], v[1, 2:3], p) ||
+        sameside(v[1, 2:3], p, v[3, 2:3], v[2, 2:3])) twovert <- v$pt[1]
 
-    if (crosscheck(v[3, 2:3], v[1, 2:3], v[2, 2:3], p) ||
-        crosscheck(v[2, 2:3], p, v[3, 2:3], v[1, 2:3])) twovert <- c(twovert, v$pt[2])
+    if (sameside(v[3, 2:3], v[1, 2:3], v[2, 2:3], p) ||
+        sameside(v[2, 2:3], p, v[3, 2:3], v[1, 2:3])) twovert <- c(twovert, v$pt[2])
 
-    if (crosscheck(v[1, 2:3], v[2, 2:3], v[3, 2:3], p) ||
-        crosscheck(v[3, 2:3], p, v[1, 2:3], v[2, 2:3])) twovert <- c(twovert, v$pt[3])
+    if (sameside(v[1, 2:3], v[2, 2:3], v[3, 2:3], p) ||
+        sameside(v[3, 2:3], p, v[1, 2:3], v[2, 2:3])) twovert <- c(twovert, v$pt[3])
 
     if (length(twovert) > 2) {
       vdf <- df[twovert,]

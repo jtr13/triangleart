@@ -11,9 +11,7 @@ The easy way would be to upload photos to [site mentioned in the
 post](https://snorpey.github.io/triangulation/) and convert them to low
 poly:
 
-<figure>
-<img src="img/lowpolycircle.png" style="width:35.0%" alt="A circle converted to low poly" /><figcaption aria-hidden="true"><em>A circle converted to low poly</em></figcaption>
-</figure>
+![*A circle converted to low poly*](img/lowpolycircle.png)
 
 But I wanted more control. I found an R package to create meshes but
 there was no obvious way to customize plots (I’ll return to R options
@@ -23,6 +21,40 @@ toddler could do it!
 <figure>
 <img src="img/trianglemesh.png" style="width:35.0%" alt="Simple triangle mesh with 16 points" /><figcaption aria-hidden="true"><em>Simple triangle mesh with 16 points</em></figcaption>
 </figure>
+
+``` r
+library(triangleart)
+library(deldir)
+```
+
+    ## deldir 1.0-6      Nickname: "Mendacious Cosmonaut"
+
+    ## 
+    ##      The syntax of deldir() has had an important change. 
+    ##      The arguments have been re-ordered (the first three 
+    ##      are now "x, y, z") and some arguments have been 
+    ##      eliminated.  The handling of the z ("tags") 
+    ##      argument has been improved.
+    ##  
+    ##      The "dummy points" facility has been removed. 
+    ##      This facility was a historical artefact, was really 
+    ##      of no use to anyone, and had hung around much too 
+    ##      long.  Since there are no longer any "dummy points", 
+    ##      the structure of the value returned by deldir() has 
+    ##      changed slightly.  The arguments of plot.deldir() 
+    ##      have been adjusted accordingly; e.g. the character 
+    ##      string "wpoints" ("which points") has been 
+    ##      replaced by the logical scalar "showpoints". 
+    ##      The user should consult the help files.
+
+``` r
+df <- generate_data()
+plot(df$x, df$y, axes = FALSE, ann = FALSE, asp = 1, pch = 16)
+plot(df$x, df$y, axes = FALSE, ann = FALSE, asp = 1, pch = 16)
+plot(triang.list(deldir(df$x, df$y)), add=TRUE)
+```
+
+<img src="README_files/figure-gfm/unnamed-chunk-1-1.png" width="50%" />
 
 Well, a lot harder than it looks. But it was fun to experiment without
 any packages or complex algorithms and see what I could do with some
@@ -45,11 +77,10 @@ endpoints of each lie on opposite sides of the line through the other
 two points.)
 
 ``` r
-library(triangleart)
 simple(tlab = TRUE)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ![](img/triangles-AA.png)
 
