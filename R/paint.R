@@ -10,6 +10,9 @@
 #'
 #' paint()
 #'
+#' s <- simple(seed = 8)
+#' paint(s[[1]], s[[2]], col = c("red", "green"))
+#'
 paint <- function(df = NULL, triangles = NULL, col = palette.colors(), add = FALSE) {
   if (is.null(df)) df <- generate_data()
   if (!add) plot(df, cex = 0, asp = 1, axes = FALSE, ann = FALSE)

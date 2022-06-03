@@ -112,6 +112,6 @@ simple <- function(df = NULL, i = 4, np = NULL, method = "anypair",
                      col = border)
     }
   }
-  invisible(list(df, triangle))
+  invisible(list(df[,2:3], data.frame(t(triangle))))
 }
 
