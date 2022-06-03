@@ -1,8 +1,8 @@
 # an attempt at triangle mesh
 
 #' @export
-generate_data <- function(np = 16, seed = 13) {
-  set.seed(seed)
+generate_data <- function(np = 16, seed = NULL) {
+  if (!is.null(seed)) set.seed(seed)
   n <- sqrt(np)
   x <- rep(1:n, n) + rnorm(n^2)/10
   y <- rep(1:n, each = n) + rnorm(n^2)/10

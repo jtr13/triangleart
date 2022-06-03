@@ -26,7 +26,7 @@
 #' @export
 #'
 simple <- function(df = NULL, i = 4, np = NULL, method = "anypair",
-                   tlab = FALSE, plab = FALSE, seed = 8, col = NA) {
+                   tlab = FALSE, plab = FALSE, seed = NULL, col = NA) {
   border <- "black"
   if (is.null(df)) df <- generate_data(seed = seed)
   df <- data.frame(pts = 1:nrow(df), x = df[,1], y = df[,2])

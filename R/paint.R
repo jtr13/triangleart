@@ -12,7 +12,7 @@
 #'
 paint <- function(df = NULL, triangles = NULL, col = palette.colors(), add = FALSE) {
   if (is.null(df)) df <- generate_data()
-  if (!add) plot(df, cex = 0)
+  if (!add) plot(df, cex = 0, asp = 1, axes = FALSE, ann = FALSE)
   if (is.null(triangles)) triangles <- get_triangles(df)
   col <- rep(col, length(triangles))
   for(i in seq_along(triangles)) {
