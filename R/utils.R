@@ -6,7 +6,7 @@ generate_data <- function(np = 16, seed = 13) {
   n <- sqrt(np)
   x <- rep(1:n, n) + rnorm(n^2)/10
   y <- rep(1:n, each = n) + rnorm(n^2)/10
-  data.frame(pts = 1:np, x,y)
+  data.frame(x,y)
 }
 
 sameside <- function(v1, v2, v3, p) {

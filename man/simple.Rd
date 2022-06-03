@@ -2,7 +2,7 @@
 % Please edit documentation in R/simple.R
 \name{simple}
 \alias{simple}
-\title{Very simple mesh algorithms that don't work}
+\title{Failed triangle mesh algorithms}
 \usage{
 simple(
   df = NULL,
@@ -16,10 +16,34 @@ simple(
 )
 }
 \arguments{
-\item{df}{}
+\item{df}{two column data.frame with (x, y) coordinates (if df has more than two columns the first two will be used)}
 
-\item{col}{}
+\item{i}{starting point (row number)}
+
+\item{np}{number of points (used to generate data if )}
+
+\item{method}{algorithm for choosing the vertices of the next triangle, in both cases a new point and a triangle are identified and a new triangle is drawn by connecting the new point to the triangle vertices as long as the new side doesn't intersect with the current triangle. The methods for choosing the new points and triangles vary.
+\describe{
+\item{\code{closepoint}}{The new point is the closest point to third vertex of current triangle; the reference triangle is the current triangle.}
+\item{\code{anypair}}{The new point is the closest unused point (not in a triangle) to any used point. The triangle is the closest triangle to the point that has the used point as a vertex.}
+}}
+
+\item{tlab}{logical if \code{TRUE} triangles are numbered}
+
+\item{plab}{logical if \code{TRUE} points are numbered}
+
+\item{seed}{integer seed used if data is generated}
+
+\item{col}{fill color for triangles}
+}
+\value{
+List with the following components:
+
+\describe{
+\item{\code{df}}{data.frame of points}
+\item{\code{triangle}}{data.frame of triangle vertices}
+}
 }
 \description{
-Very simple mesh algorithms that don't work
+Very simple mesh algorithms that don't work but make aRt.
 }

@@ -1,48 +1,36 @@
-# attempt at triangle mesh
-#
-# Algorithm
-#
-# Initial triangle:
-#
-# 1. Start with a point (i)
-# 2. Find the closest point (i2)
-# 3. Find the closest point to i2 (i3)
-# 4. Draw a triangle with vertices i, i2, i3
-#
-# Repeat:
-#
-# 1. Find the closest point to i3 (newp)
-# 2. Check newp-i
-#
-# Getting better... fixed the problem of checking whether
-# line segments intersect
-# (needed sameside(v[1,], v[2,] v[3,] p) || sameside(v[3,] p, v[1,], v[2,]),
-# not just the first half)
-#
-# Next steps: change the algorithm so it goes point by point finding the closest *triangle* (based on all vertices) rather than finding the closest *point* to the current triangle. The current methods results in big jumps once the close points are used up.
-#
-
-# vertices of the twovert triangle, only the shortest two are twovert (this is an improvement over triangles2.R)
-#' Very simple mesh algorithms that don't work
-
-#' @param df
+#' Failed triangle mesh algorithms
 #'
-#' @param i
-#' @param np
-#' @param method
-#' @param tlab
-#' @param plab
-#' @param seed
-#' @param col
+#' Very simple mesh algorithms that don't work but make aRt.
+#'
+#' @param df two column data.frame with (x, y) coordinates (if df has more than two columns the first two will be used)
+#'
+#' @param i starting point (row number)
+#' @param np number of points (used to generate data if )
+#' @param method algorithm for choosing the vertices of the next triangle, in both cases a new point and a triangle are identified and a new triangle is drawn by connecting the new point to the triangle vertices as long as the new side doesn't intersect with the current triangle. The methods for choosing the new points and triangles vary.
+#' \describe{
+#'   \item{\code{closepoint}}{The new point is the closest point to third vertex of current triangle; the reference triangle is the current triangle.}
+#'   \item{\code{anypair}}{The new point is the closest unused point (not in a triangle) to any used point. The triangle is the closest triangle to the point that has the used point as a vertex.}
+#' }
+#' @param tlab logical if \code{TRUE} triangles are numbered
+#' @param plab logical if \code{TRUE} points are numbered
+#' @param seed integer seed used if data is generated
+#' @param col fill color for triangles
+#'
+#' @return List with the following components:
+#'
+#' \describe{
+#'   \item{\code{df}}{data.frame of points}
+#'   \item{\code{triangle}}{data.frame of triangle vertices}
+#'   }
 #'
 #' @export
 #'
 simple <- function(df = NULL, i = 4, np = NULL, method = "anypair",
                    tlab = FALSE, plab = FALSE, seed = 8, col = NA) {
   border <- "black"
-  if (is.null(df)) {
-    df <- generate_data(seed = seed)
-  } else if (ncol(df) == 2) df <- cbind(pts = rownames(df), df)
+  if (is.null(df)) df <- generate_data(seed = seed)
+  df <- data.frame(pts = 1:nrow(df), x = df[,1], y = df[,2])
+  head(df)
   if (is.null(np)) {
     np <- nrow(df)
     unfinished <- FALSE
@@ -124,4 +112,6 @@ simple <- function(df = NULL, i = 4, np = NULL, method = "anypair",
                      col = border)
     }
   }
+  invisible(list(df, triangle))
 }
+
