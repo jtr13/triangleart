@@ -5,7 +5,7 @@
 \title{Create a triangle mesh}
 \usage{
 mesh(
-  df = null,
+  df = NULL,
   n = 4,
   sd = 0.2,
   remove = FALSE,
