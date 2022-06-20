@@ -4,7 +4,7 @@
 \alias{paint}
 \title{Fill Delaunay triangles}
 \usage{
-paint(df = NULL, triangles = NULL, col = palette.colors())
+paint(df = NULL, triangles = NULL, col = palette.colors(), add = FALSE)
 }
 \arguments{
 \item{df}{data.frame of x,y pairs}
@@ -19,5 +19,8 @@ Fill Delaunay triangles
 \examples{
 
 paint()
+
+s <- simple(seed = 8)
+paint(s[[1]], s[[2]], col = c("red", "green"))
 
 }

@@ -11,7 +11,7 @@ simple(
   method = "anypair",
   tlab = FALSE,
   plab = FALSE,
-  seed = 8,
+  seed = NULL,
   col = NA
 )
 }

@@ -35,6 +35,8 @@ paint <- function(df = NULL, triangles = NULL, col = palette.colors(), add = FAL
 #'
 #' get_triangles(generate_data(np = 9))
 #'
+#' @return list of triangle vertices
+#'
 get_triangles <- function(df) {
   d <- deldir::deldir(df)
   segs <- d$delsgs[,c("ind1", "ind2")]

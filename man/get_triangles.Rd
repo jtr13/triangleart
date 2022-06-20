@@ -11,6 +11,8 @@ get_triangles(df)
 }
 \value{
 list of vertices (based on rownames of df)
+
+list of triangle vertices
 }
 \description{
 Convert list of segment endpoints to triangles
